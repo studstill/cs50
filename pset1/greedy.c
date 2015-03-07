@@ -2,57 +2,46 @@
 #include <cs50.h>
 #include <math.h>
 
-int main(void)
+int main(int argc, string argv[])
 {
     // Define variable for storing the total amount of change owed
     float change;
-    
-    
-    // These are some wacky changes that I made 
-    // asdf
-    // asdf
     
     do
     {
         // Prompt user for a non-negative number
         printf("How much change is owed? $");
-        change = ((GetFloat()) * 100);
+        change = GetFloat();
+        
+        // Multiply by 100 to do calculations with ints instead of floats 
+        change = change * 100;
+        
+        // Round change to alleviate float imprecision
+        change = round(change);
+ 
     }
     while (change < 0);
     
-    printf("\nHere is your change using the fewest possible coins:\n");
-    
-    if (change >= 25)
+    while (change >= 1)
     {
         // Calculate quarters
         int quarters = (change / 25);
-        printf("%d Quarters\n", quarters);
         change = change - (quarters * 25);
-    }
     
-    if (change >= 10)
-    {
         // Calculate dimes
         int dimes = (change / 10);
-        printf("%d Dimes\n", dimes);
         change = change - (dimes * 10);
-    }
    
-    if (change >= 05)
-    {
         // Calculate nickels
         int nickels = (change / 5);
-        printf("%d Nickels\n", nickels);
         change = change - (nickels * 5);  
-    }
     
-    if (change > 0)
-    {
         // Calculate pennies
         int pennies = (change / 1);
-        printf("%d Pennies\n", pennies);
         change = change - (pennies * 1);
+        
+        // Print the total number of coins that are used
+        printf("%d\n", quarters + dimes + nickels + pennies);
     }
-    
 }
 
