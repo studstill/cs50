@@ -7,6 +7,11 @@ int main(void)
     // Define variable for storing the total amount of change owed
     float change;
     
+    
+    // These are some wacky changes that I made 
+    // asdf
+    // asdf
+    
     do
     {
         // Prompt user for a non-negative number
