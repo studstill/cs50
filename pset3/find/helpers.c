@@ -8,6 +8,7 @@
  */
        
 #include <cs50.h>
+#include <string.h>
 
 #include "helpers.h"
 
@@ -16,19 +17,24 @@
  */
 bool search(int value, int values[], int n)
 {
-    // TODO: implement a searching algorithm
+    // Return false is n is a negative int
+    if (n < 1)
+    {
+        return false;
+    }
+    
+    // Iterate through every position in values[]
+    // Return true if value is found
     for (int i = 0; i < n; i++)
     {
         if (values[i] == value)
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
-    }   
-       
+
+    }
+    // Return false if value is not in the array values[]    
+    return false;
 }
 
 /**
