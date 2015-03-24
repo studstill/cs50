@@ -45,12 +45,17 @@ int main(int argc, string argv[])
         srand48((long int) time(NULL));
     }
 
+    // Define an array
+    int values[n];
+    
     // Print n number of pseudo-random numbers
     for (int i = 0; i < n; i++)
     {
-        printf("%i\n", (int) (drand48() * LIMIT));
+        values[i] = (int) (drand48() * LIMIT);
+        // printf("%i\n", (int) (drand48() * LIMIT));
+        printf("%i\n", values[i]);
     }
-
+    
     // success
     return 0;
 }

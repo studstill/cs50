@@ -42,6 +42,37 @@ bool search(int value, int values[], int n)
  */
 void sort(int values[], int n)
 {
-    // TODO: implement an O(n^2) sorting algorithm
+    // Implement Insertion Sort
+    
+    int i = 0;
+    int j;
+    int temp;
+    int new_min;
+    
+    while (i < n)
+    {
+        j = i;
+        new_min = values[i];
+        
+        while (j < n)
+        {
+            if (values[j] < new_min)
+            {
+                new_min = values[j];
+
+                temp = values[i];
+                values[i] = new_min;
+                values[j] = temp;
+                j++;
+            }
+            else
+            {
+                j++;
+            }
+        }
+ 
+        i++;
+    }
+    
     return;
 }
