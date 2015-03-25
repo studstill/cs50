@@ -52,7 +52,7 @@ int binarySearch(int key, int array[], int min, int max)
         }
         else if (array[midpoint] > key)
         {
-            return binarySearch(key, array, min, midpoint -1);
+            return binarySearch(key, array, min, midpoint - 1);
         }
         else
         {
@@ -62,8 +62,7 @@ int binarySearch(int key, int array[], int min, int max)
 
         // Return an error if key cannot be found in values[]
         return -1;
-      }
-    
+      } 
 }
 
 /**
@@ -81,13 +80,13 @@ bool search(int value, int values[], int n)
         // Execute binarySearch and compare it to your value (key)
         if (binarySearch(value, values, 0, n) == value)
         {
-           return true;
+            return true;
         }
 
         else
         {
         // Return false if value is not in the array values[]    
-        return false;
+            return false;
         }
     }
 }
