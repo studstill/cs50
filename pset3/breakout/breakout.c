@@ -83,6 +83,9 @@ int main(void)
     
     // add paddle to window
     add(window, paddle);
+    
+    // add ball to windo
+    add(window, ball);
 
     // keep playing until game over
     while (lives > 0 && bricks > 0)
@@ -153,8 +156,12 @@ void initBricks(GWindow window)
  */
 GOval initBall(GWindow window)
 {
+    
+    GOval ball = newGOval((WIDTH / 2) - RADIUS, 570 - ( RADIUS * 2), RADIUS * 2, RADIUS * 2);
+    setColor(ball, "BLUE");
+    setFilled(ball, true);
     // TODO
-    return NULL;
+    return ball;
 }
 
 /**
@@ -163,7 +170,7 @@ GOval initBall(GWindow window)
 GRect initPaddle(GWindow window)
 {
     // create paddle centered in the middle of the screen
-    GRect paddle = newGRect((getWidth(window) - PWIDTH) / 2, 570, PWIDTH, PHEIGHT);
+    GRect paddle = newGRect((WIDTH - PWIDTH) / 2, 570, PWIDTH, PHEIGHT);
     setColor(paddle, "BLACK");
     setFilled(paddle, true);
     
