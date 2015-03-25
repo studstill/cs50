@@ -4,7 +4,7 @@
 // Computer Science 50
 // Problem Set 3
 //
-// Jason Studstill
+// Modified by Jason Studstill
 //
 // standard libraries
 #define _XOPEN_SOURCE
@@ -28,8 +28,18 @@
 // number of columns of bricks
 #define COLS 10
 
+// height of brick's total footprint, including white space
+#define BHFOOT 24
+
+// width of brick's total footprint, including white space
+#define BWFOOT 40
+
 // radius of ball in pixels
 #define RADIUS 10
+
+// height and width of paddle
+#define PHEIGHT 10
+#define PWIDTH 60
 
 // lives
 #define LIVES 3
@@ -70,11 +80,31 @@ int main(void)
 
     // number of points initially
     int points = 0;
+    
+    // add paddle to window
+    add(window, paddle);
 
     // keep playing until game over
     while (lives > 0 && bricks > 0)
     {
+        // paddle follows cursor's movements
+        while(true)
+        {
+            GEvent event = getNextEvent(MOUSE_EVENT);
+            
+            if (event != NULL)
+            {
+                if (getEventType(event) == MOUSE_MOVED)
+                {
+                    double x = getX(event) - getWidth(paddle) / 2;
+                    double y = 570;
+                    setLocation(paddle, x, y);
+                }
+            }
+        }
+        
         // TODO
+        
     }
 
     // wait for click before exiting
@@ -90,7 +120,32 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
-    // TODO
+    // define brick's actual dimensions, providing space between bricks
+    int bheight = BHFOOT -2 ;
+    int bwidth = BWFOOT - 2;
+    
+    // declare variables for determining each new bricks starting position
+    int nbrick_y = 0;
+    int nbrick_x = 0;
+    
+    for (int i = 0; i < ROWS; i++)
+    {
+        nbrick_x = 0;
+        
+        for (int j = 0; j < COLS; j++)
+        {
+            // create a brick at the start of the first brick's 
+            // footprint or 0,0
+            GRect brick = newGRect(nbrick_x, nbrick_y, bwidth, bheight);
+            setColor(brick, "RED");
+            setFilled(brick, true);
+            
+            add(window, brick);
+            nbrick_x += BWFOOT;
+        }
+                
+        nbrick_y += BHFOOT;
+    }
 }
 
 /**
@@ -107,8 +162,12 @@ GOval initBall(GWindow window)
  */
 GRect initPaddle(GWindow window)
 {
-    // TODO
-    return NULL;
+    // create paddle centered in the middle of the screen
+    GRect paddle = newGRect((getWidth(window) - PWIDTH) / 2, 570, PWIDTH, PHEIGHT);
+    setColor(paddle, "BLACK");
+    setFilled(paddle, true);
+    
+    return paddle;
 }
 
 /**
