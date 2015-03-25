@@ -4,7 +4,8 @@
 // Computer Science 50
 // Problem Set 3
 //
-
+// Jason Studstill
+//
 // standard libraries
 #define _XOPEN_SOURCE
 #include <stdio.h>
