@@ -26,16 +26,17 @@ int findMidPoint(int min, int max)
     {
         // Find the midpoint at the position of the average of max and min
         midpoint = (max + min) / 2;
-        printf("the midpoint is %d\n", midpoint);
         return midpoint;
     }
     
+    // Return error if midpoint cannot be found
     return -1;
 }
 
 int binarySearch(int key, int array[], int min, int max)
 {
      
+    // 
     if (max < min)
     {
         return -1;
@@ -43,7 +44,7 @@ int binarySearch(int key, int array[], int min, int max)
     else
     {
         int midpoint = findMidPoint(min, max);
-        printf("this midpoint with in the binarySearch funciont is %d\n", midpoint);
+        
         if (array[midpoint] < key)
         {
             binarySearch(key, array, midpoint + 1, max);
@@ -55,16 +56,12 @@ int binarySearch(int key, int array[], int min, int max)
         }
         else
         {
-            printf("key is found at the index %d, and is %d\n", midpoint, array[midpoint]);
-            midpoint = array[midpoint];
+            // Return the value at the index of midpoint, which equals your key
             return array[midpoint];
         }
 
-
-    printf("why does this print everytime?");
- //   printf("%d\n", midpoint);
-
-      return -1;
+        // Return an error if key cannot be found in values[]
+        return -1;
       }
     
 }
@@ -74,8 +71,6 @@ int binarySearch(int key, int array[], int min, int max)
  */
 bool search(int value, int values[], int n)
 {
-    // return false;
-    
     // Return false if n is a negative int
     if (n < 0)
     {
@@ -83,32 +78,17 @@ bool search(int value, int values[], int n)
     }
     else
     {
-        int ifFound = binarySearch(value, values, 0, n);
-        printf("%d\n", ifFound);
-        
-        
-        if (ifFound == value)
+        // Execute binarySearch and compare it to your value (key)
+        if (binarySearch(value, values, 0, n) == value)
         {
-            printf("it was found, see: %d\n", ifFound);
-            return true;
+           return true;
         }
-   
-/*        // Linear Search O(n)        */
-/*        for (int i = 0; i < n; i++)*/
-/*        {*/
-/*            if (values[i] == value)*/
-/*            {*/
-/*                return true;*/
-/*            }*/
-/*        }   */
+
         else
         {
         // Return false if value is not in the array values[]    
         return false;
         }
-        
-       // return 1;
-       
     }
 }
 
@@ -148,10 +128,6 @@ void sort(int values[], int n)
  
         i++;
     }
-    
-    for (i = 0; i < n; i++)
-    {
-        printf("%d\n", values[i]);
-    }
+
     return;
 }
