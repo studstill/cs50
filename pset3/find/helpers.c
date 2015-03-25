@@ -47,12 +47,12 @@ int binarySearch(int key, int array[], int min, int max)
         
         if (array[midpoint] < key)
         {
-            binarySearch(key, array, midpoint + 1, max);
+            return binarySearch(key, array, midpoint + 1, max);
            
         }
         else if (array[midpoint] > key)
         {
-            binarySearch(key, array, min, midpoint -1);
+            return binarySearch(key, array, min, midpoint -1);
         }
         else
         {
