@@ -65,6 +65,10 @@ int main(void)
 
     // instantiate ball, centered in middle of window
     GOval ball = initBall(window);
+    
+    // set ball's velocity
+    double x_velocity = (double) drand48() * 2.5;
+    double y_velocity = 2.0;
 
     // instantiate paddle, centered at bottom of window
     GRect paddle = initPaddle(window);
@@ -81,30 +85,67 @@ int main(void)
     // number of points initially
     int points = 0;
     
+    
     // add paddle to window
     add(window, paddle);
     
-    // add ball to windo
+    // add ball to window
     add(window, ball);
-
+    
     // keep playing until game over
     while (lives > 0 && bricks > 0)
     {
+        // determine paddle's movement
+        GEvent event = getNextEvent(MOUSE_EVENT);
         // paddle follows cursor's movements
-        while(true)
+        if (event != NULL)
         {
-            GEvent event = getNextEvent(MOUSE_EVENT);
-            
-            if (event != NULL)
+            if (getEventType(event) == MOUSE_MOVED)
             {
-                if (getEventType(event) == MOUSE_MOVED)
-                {
-                    double x = getX(event) - getWidth(paddle) / 2;
-                    double y = 570;
-                    setLocation(paddle, x, y);
-                }
+                double x = getX(event) - getWidth(paddle) / 2;
+                double y = 570;
+                setLocation(paddle, x, y);
             }
+        } 
+        
+        // move ball "x_velocity" px  on x-axis and y_velocity px on y-axis
+        move(ball, x_velocity, y_velocity);
+
+
+        // listen for collision
+        GObject object = detectCollision(window, ball);
+        
+        // if ball touches window, while moving left to right, reverse direction
+        if (getX(ball) + getWidth(ball) >= WIDTH)
+        {
+            x_velocity = -x_velocity;
         }
+        
+        // if ball touches window, while moving left to right, reverse direction
+        else if (getX(ball) <= 0)
+        {
+            x_velocity = -x_velocity;
+        }
+        
+        else if (getY(ball) + getWidth(ball) >= HEIGHT)
+        {
+            y_velocity = -y_velocity;
+        }
+        
+        else if (getY(ball) <= 0)
+        {
+            y_velocity = -y_velocity;
+        }
+        
+        else if (object)
+        {
+
+           y_velocity = -y_velocity; 
+            
+        }
+        // pause 10 ms between each movement of velocity px
+        pause(10);
+            
         
         // TODO
         
@@ -157,10 +198,9 @@ void initBricks(GWindow window)
 GOval initBall(GWindow window)
 {
     
-    GOval ball = newGOval((WIDTH / 2) - RADIUS, 570 - ( RADIUS * 2), RADIUS * 2, RADIUS * 2);
+    GOval ball = newGOval((WIDTH / 2) - RADIUS, 530, RADIUS * 2, RADIUS * 2);
     setColor(ball, "BLUE");
     setFilled(ball, true);
-    // TODO
     return ball;
 }
 
@@ -212,7 +252,9 @@ GObject detectCollision(GWindow window, GOval ball)
 {
     // ball's location
     double x = getX(ball);
+    printf("%f, ", x);
     double y = getY(ball);
+    printf("%f\n", y);
 
     // for checking for collisions
     GObject object;
