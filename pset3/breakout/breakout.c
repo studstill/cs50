@@ -7,6 +7,7 @@
 // Modified by Jason Studstill
 //
 // standard libraries
+
 #define _XOPEN_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,11 +39,17 @@
 #define RADIUS 10
 
 // height and width of paddle
-#define PHEIGHT 10
+#define PHEIGHT 8
 #define PWIDTH 60
 
 // lives
 #define LIVES 3
+
+// ball starting point on y-axis
+#define BSP 475
+
+// paddle starting point on y-axis
+#define PSP 520
 
 // prototypes
 void initBricks(GWindow window);
@@ -67,8 +74,8 @@ int main(void)
     GOval ball = initBall(window);
     
     // set ball's velocity
-    double x_velocity = (double) drand48() * 2.5;
-    double y_velocity = 2.0;
+    double x_velocity = (double) drand48() * -3;
+    double y_velocity = -3;
 
     // instantiate paddle, centered at bottom of window
     GRect paddle = initPaddle(window);
@@ -85,35 +92,52 @@ int main(void)
     // number of points initially
     int points = 0;
     
-    
-    // add paddle to window
+    initScoreboard(window);
+   
+    // add paddle to window at starting coordinates
     add(window, paddle);
     
-    // add ball to window
+    // add ball to window at starting coordinates
     add(window, ball);
+    
+    // instantiate scoreboard and "update it" to starting value
+    updateScoreboard(window, label, points); 
+    
+    waitForClick();
     
     // keep playing until game over
     while (lives > 0 && bricks > 0)
     {
+        // instatiate scoreboard and "update it" to starting value
+        updateScoreboard(window, label, points);
+
         // determine paddle's movement
         GEvent event = getNextEvent(MOUSE_EVENT);
-        // paddle follows cursor's movements
+       
         if (event != NULL)
         {
             if (getEventType(event) == MOUSE_MOVED)
             {
                 double x = getX(event) - getWidth(paddle) / 2;
-                double y = 570;
-                setLocation(paddle, x, y);
+                double y = PSP;
+                if (x > (WIDTH - getWidth(paddle)))
+                {
+                    setLocation(paddle, WIDTH - getWidth(paddle), y);
+                }
+                else if (x < 0)
+                {
+                    setLocation(paddle, 0, y);
+                }
+                else
+                {
+                    setLocation(paddle, x, y);
+                }
             }
         } 
-        
-        // move ball "x_velocity" px  on x-axis and y_velocity px on y-axis
-        move(ball, x_velocity, y_velocity);
-
 
         // listen for collision
-        GObject object = detectCollision(window, ball);
+        GObject object = detectCollision(window, ball); 
+
         
         // if ball touches window, while moving left to right, reverse direction
         if (getX(ball) + getWidth(ball) >= WIDTH)
@@ -126,33 +150,61 @@ int main(void)
         {
             x_velocity = -x_velocity;
         }
-        
+
+        // if ball is touching bottom of window: lose a life, start over       
         else if (getY(ball) + getWidth(ball) >= HEIGHT)
         {
-            y_velocity = -y_velocity;
+            lives--;
+            waitForClick();
+ 
+            // reposition ball and paddle in the center of window
+            if (lives > 0)
+            {
+                setLocation(ball, (WIDTH / 2) - RADIUS, BSP);
+                setLocation(paddle, (WIDTH - PWIDTH) / 2, PSP);
+                y_velocity = -y_velocity;
+                waitForClick();
+            }
+  
         }
         
+        // bounce off top of window
         else if (getY(ball) <= 0)
         {
             y_velocity = -y_velocity;
         }
         
-        else if (object)
+        // bounce off paddle
+        else if (object == paddle)
         {
-
-           y_velocity = -y_velocity; 
-            
+            y_velocity = -y_velocity;
         }
-        // pause 10 ms between each movement of velocity px
-        pause(10);
-            
-        
-        // TODO
-        
-    }
 
-    // wait for click before exiting
-    waitForClick();
+        // react to objects
+        else if (object != NULL)
+        {
+            // do nothing if ball touches scoreboard
+            if (strcmp(getType(object), "GLabel") == 0)
+            {
+                // do nothing
+            }
+            // remove the brick, add point, and change bounce direction
+            else
+            {
+                removeGWindow(window, object);
+                y_velocity = -y_velocity;
+                points++;
+                bricks--;
+            }
+        }       
+
+               
+        // move ball "x_velocity" px  on x-axis and y_velocity px on y-axis
+        move(ball, x_velocity, y_velocity);
+                
+        // pause 10 ms between each movement of velocity px
+        pause(10);   
+    }
 
     // game over
     closeGWindow(window);
@@ -165,12 +217,12 @@ int main(void)
 void initBricks(GWindow window)
 {
     // define brick's actual dimensions, providing space between bricks
-    int bheight = BHFOOT -2 ;
+    int bheight = BHFOOT - 2 ;
     int bwidth = BWFOOT - 2;
     
     // declare variables for determining each new bricks starting position
-    int nbrick_y = 0;
-    int nbrick_x = 0;
+    int nbrick_y = 20;
+    int nbrick_x = 20;
     
     for (int i = 0; i < ROWS; i++)
     {
@@ -198,7 +250,7 @@ void initBricks(GWindow window)
 GOval initBall(GWindow window)
 {
     
-    GOval ball = newGOval((WIDTH / 2) - RADIUS, 530, RADIUS * 2, RADIUS * 2);
+    GOval ball = newGOval((WIDTH / 2) - RADIUS, BSP, RADIUS * 2, RADIUS * 2);
     setColor(ball, "BLUE");
     setFilled(ball, true);
     return ball;
@@ -210,7 +262,7 @@ GOval initBall(GWindow window)
 GRect initPaddle(GWindow window)
 {
     // create paddle centered in the middle of the screen
-    GRect paddle = newGRect((WIDTH - PWIDTH) / 2, 570, PWIDTH, PHEIGHT);
+    GRect paddle = newGRect((WIDTH - PWIDTH) / 2, PSP, PWIDTH, PHEIGHT);
     setColor(paddle, "BLACK");
     setFilled(paddle, true);
     
@@ -222,8 +274,15 @@ GRect initPaddle(GWindow window)
  */
 GLabel initScoreboard(GWindow window)
 {
-    // TODO
-    return NULL;
+    
+    GLabel label = newGLabel("");
+    setFont(label, "SansSerif-36");
+    add(window, label);
+    
+    double x = (getWidth(window) - getWidth(label)) / 2;
+    double y = (getHeight(window) - getHeight(label)) / 2;
+    setLocation(label, x, y);
+    return label;
 }
 
 /**
@@ -252,9 +311,7 @@ GObject detectCollision(GWindow window, GOval ball)
 {
     // ball's location
     double x = getX(ball);
-    printf("%f, ", x);
     double y = getY(ball);
-    printf("%f\n", y);
 
     // for checking for collisions
     GObject object;
