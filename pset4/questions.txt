@@ -1,0 +1,32 @@
+0.  JPEG - 16.7 million
+    GIF - 256 colors
+    PNG - 8bit holds 256; 24bit 16 million
+    BMP - 8bit holds 256; 24bit can hold 16.8 million
+1.  GIF supports animation
+2.  "Lossless and lossy compression are terms that describe whether or not, in the compression
+    of a file, all original data can be recovered when the file is uncompressed.  With lossless
+    compression, every single bit of data that was originally in the file remains after the file
+    is uncompressed."
+3.  JPEG
+4.  "First, the system modifies the filename's first character in the file's directory entry to
+    signal that the file has been deleted and that the directory entry can be recycled.  Second
+    the system moves all of the file's FAT clusters to the hard drive's list of free clusters.
+    The actual file data is never touched."
+5.  "You can intentionally overwrite the data with other data so that the original data cannot
+    be recovered." 
+6.  <stdint.h> is a header file that standardizes the "width" of integers (the number of bits
+    used to store its value in a binary system) across platforms.
+7.  The point of using uint8_t, uint32_t, int32_t, and uint16_t is to define and utilize the
+    different integer data types in C to allocate memory appropriately. CHAR, INT (positive only), INT
+    (positive or negative), SHORT 
+8.  1, 4, 4, 2
+9.  BM (bfType are made up of the first two bytes)
+10. bfSize is the size of the BITMAPFILEHEADER and biSize is the size of the BITMAPINFOHEADER
+11. The BMP is drawn from the top-down, with the origin in the top-left corner
+12. biBitCount (bits-per-pixel, or "the color depth")
+13. It might return NULL is the computer is out of memory and therefore could not create the file.
+14. Because we only want to read one element of data at a time (i.e. BITMAPFILEHEADER or BITMAPINFORHEADER)
+15. 1
+16. It "skips ahead" a specified number of spaces in a file.
+17. It is the current position of the file pointer.
+18. TODO
